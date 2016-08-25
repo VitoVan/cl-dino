@@ -61,7 +61,7 @@
          (first-color (first-pixel->color snap-data)))
     (x-find-color first-color  :x x :y y :width w :height h
                   :test #'(lambda (a b) (not (equal a b)))
-                  :snap-data snap-data)))
+                  :data snap-data)))
 
 (defun dino-jump ()
   (when (or ; only jump if dino is on the ground.

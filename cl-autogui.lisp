@@ -143,7 +143,7 @@ body is called on each action."
                        (delay 0)
                        path)
     "Return RGB data array (The dimensions correspond to the height, width,
-and pixel components, see comments in x-search-color for more details),
+and pixel components, see comments in x-find-color for more details),
 or write to file (PNG only), depend on if you provide the path keyword"
     (sleep delay)
     (with-default-window (w)
@@ -165,19 +165,18 @@ or write to file (PNG only), depend on if you provide the path keyword"
   (defun x-find-color (rgba &key (x 0) (y 0)
                               (width default-width) (height default-height)
                               (test #'equal)
-                              snap-data)
+                              (data (x-snapshot :x x :y y :width width :height height)))
     "Search screen for specific Color (PNG's RGBA mode, where 'A' should be 0~255)"
-    (let ((data (or snap-data (x-snapshot :x x :y y :width width :height height))))
-      (dotimes (s-x width)
-        (dotimes (s-y height)
-          (labels ((get-rgba (data x y)
-                     (mapcar
-                      #'(lambda (i) (aref data y x i))
-                      ;; why reversed order? http://xach.com/lisp/zpng/#data-array
-                      ;; what is row-major? https://goo.gl/eF1F28
-                      '(0 1 2 3))))
-            (when (funcall test rgba (get-rgba data s-x s-y))
-              (return-from x-find-color (list (+ x s-x) (+ y s-y))))))))))
+    (dotimes (s-x width)
+      (dotimes (s-y height)
+        (labels ((get-rgba (data x y)
+                   (mapcar
+                    #'(lambda (i) (aref data y x i))
+                    ;; why reversed order? http://xach.com/lisp/zpng/#data-array
+                    ;; what is row-major? https://goo.gl/eF1F28
+                    '(0 1 2 3))))
+          (when (funcall test rgba (get-rgba data s-x s-y))
+            (return-from x-find-color (list (+ x s-x) (+ y s-y)))))))))
 
 (defun pixel->color (image-data x y)
   (funcall
