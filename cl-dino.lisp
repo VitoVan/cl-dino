@@ -1,6 +1,8 @@
-(load "cl-autogui.lisp")
-
-(ql:quickload 'cl-ppcre)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  #-clautogui
+  (load "cl-autogui.lisp")
+  #-clppcre
+  (ql:quickload 'cl-ppcre))
 
 (defpackage #:cl-dino
   (:use #:common-lisp #:cl-autogui)

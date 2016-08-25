@@ -1,4 +1,8 @@
-(ql:quickload '(clx zpng))
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  #-clx
+  (ql:quickload 'clx)
+  #-zpng
+  (ql:quickload 'zpng))
 
 (defpackage #:cl-autogui
   (:use #:common-lisp #:xlib)
