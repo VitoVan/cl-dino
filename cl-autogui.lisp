@@ -167,14 +167,14 @@ or write to file (PNG only), depend on if you provide the path keyword"
                               (test #'equal)
                               (data (x-snapshot :x x :y y :width width :height height)))
     "Search screen for specific Color (PNG's RGBA mode, where 'A' should be 0~255)"
-    (dotimes (s-x width)
-      (dotimes (s-y height)
-        (labels ((get-rgba (data x y)
-                   (mapcar
-                    #'(lambda (i) (aref data y x i))
-                    ;; why reversed order? http://xach.com/lisp/zpng/#data-array
-                    ;; what is row-major? https://goo.gl/eF1F28
-                    '(0 1 2 3))))
+    (labels ((get-rgba (data x y)
+               (mapcar
+                #'(lambda (i) (aref data y x i))
+                ;; why reversed order? http://xach.com/lisp/zpng/#data-array
+                ;; what is row-major? https://goo.gl/eF1F28
+                '(0 1 2 3))))    
+      (dotimes (s-x width)
+        (dotimes (s-y height)
           (when (funcall test rgba (get-rgba data s-x s-y))
             (return-from x-find-color (list (+ x s-x) (+ y s-y)))))))))
 
