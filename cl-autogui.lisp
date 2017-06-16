@@ -63,7 +63,7 @@
 (defun x-move (x y)
   (if (and (integerp x) (integerp y))
       (with-default-display-force (d)
-        (xtest:fake-motion-event d x y))
+        (xlib/xtest:fake-motion-event d x y))
       (error "Integer only for position, (x: ~S, y: ~S)" x y)))
 
 (defun mklist (obj)
@@ -84,7 +84,7 @@ body is called on each action."
 (defun perform-mouse-action (press? button &key x y)
   (and x y (x-move x y))
   (with-default-display-force (d)
-    (xtest:fake-button-event d button press?)))
+    (xlib/xtest:fake-button-event d button press?)))
 
 (macrolet ((def (name actions)
              `(defun-with-actions ,name
@@ -116,7 +116,7 @@ body is called on each action."
 
 (defun perform-key-action (press? keycode) ; use xev to get keycode
   (with-default-display-force (d)
-    (xtest:fake-key-event d keycode press?)))
+    (xlib/xtest:fake-key-event d keycode press?)))
 
 (macrolet ((def (name actions)
              `(defun-with-actions ,name (keycode)
@@ -141,7 +141,7 @@ body is called on each action."
     png))
 
 (multiple-value-bind (default-width default-height) (x-size)
-  
+
   (defun x-snapshot (&key (x 0) (y 0)
                        (width default-width) (height default-height)
                        (delay 0)
@@ -165,7 +165,7 @@ or write to file (PNG only), depend on if you provide the path keyword"
                 (png? (zpng:write-png image path))
                 (t (error "Only PNG file is supported"))))
             (zpng:data-array image)))))
-  
+
   (defun x-find-color (rgba &key (x 0) (y 0)
                               (width default-width) (height default-height)
                               (test #'equal)
@@ -176,7 +176,7 @@ or write to file (PNG only), depend on if you provide the path keyword"
                 #'(lambda (i) (aref data y x i))
                 ;; why reversed order? http://xach.com/lisp/zpng/#data-array
                 ;; what is row-major? https://goo.gl/eF1F28
-                '(0 1 2 3))))    
+                '(0 1 2 3))))
       (dotimes (s-x width)
         (dotimes (s-y height)
           (when (funcall test rgba (get-rgba data s-x s-y))
